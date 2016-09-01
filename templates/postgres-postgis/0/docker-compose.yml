@@ -1,0 +1,26 @@
+pg:
+  restart: always
+  ports:
+  - 5432:5432/tcp
+  image: starefossen/pgrouting:9.4-2.1-2.1
+  environment:
+    - POSTGRES_PASSWORD=${pg_pass}
+    - POSTGRES_USER=${pg_user}
+    - PGDATA=${pg_data}
+    - POSTGRES_DB=${pg_db}
+    - POSTGRES_INITDB_ARGS=${pg_args}
+  labels:
+    io.rancher.scheduler.affinity:container_label_soft_ne: io.rancher.stack_service.name=$${stack_name}/$${service_name}
+    io.rancher.container.hostname_override: container_name
+    io.rancher.sidekicks: pg-datavolume
+  volumes_from:
+    - pg-datavolume
+pg-datavolume:
+  net: none
+  labels:
+    io.rancher.container.hostname_override: container_name
+    io.rancher.container.start_once: true
+  volumes:
+    - ${pg_data}
+  entrypoint: /bin/true
+  image: busybox

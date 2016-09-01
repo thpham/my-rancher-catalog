@@ -1,0 +1,50 @@
+.catalog:
+  name: "PostgreSQL / Postgis / Pgrouting"
+  version: 9.4-2.1-2.1-rancher1
+  description: |
+    pgRouting extends the PostGIS / PostgreSQL geospatial database to provide geospatial routing functionality.
+  minimum_rancher_version: v1.1.3
+  maintainer: "Thomas Pham <thomas.pham@ithings.ch>"
+  uuid: pg-postgis-routing-0
+  questions:
+    - variable: "pg_pass"
+      description: "Superuser password "
+      label: "Superuser password"
+      required: true
+      default: "postgres"
+      type: "string"
+    - variable: "pg_user"
+      description: "The default superuser"
+      label: "The default superuser:"
+      required: false
+      default: "postgres"
+      type: "string"
+    - variable: "pg_data"
+      description: "The data volume mountpoint"
+      label: "Data volume mountpoint"
+      required: false
+      default: "/var/lib/postgresql/data"
+      type: "string"
+    - variable: "pg_db"
+      description: "The default database that is created when the image is first started."
+      label: "Default database name:"
+      required: true
+      default: "postgres"
+      type: "string"
+    - variable: "pg_args"
+      description: "Used to send arguments to postgres initdb"
+      label: "Initdb arguments:"
+      required: false
+      default: "--data-checksums"
+      type: "string"
+
+pg:
+  scale: 1
+  retain_ip: true
+  health_check:
+    port: 5432
+    interval: 30000
+    unhealthy_threshold: 3
+    response_timeout: 2000
+    strategy: none
+    healthy_threshold: 2
